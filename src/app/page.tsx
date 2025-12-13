@@ -76,7 +76,7 @@ export default function Home() {
     const timeout = setTimeout(() => {
       setLost(false);
       setMessage("");
-    }, 2000);
+    }, 3000);
 
     return () => clearTimeout(timeout);
   }, [lost]);
@@ -91,8 +91,8 @@ export default function Home() {
 
       {lost && <p className="text-red-500 animate-pulse">{message}</p>}
 
-      <p className="text-xs opacity-40">
-        Move nothing. Touch nothing. Remain still.
+      <p className="text-xs opacity-40 text-center">
+        Move nothing. Touch nothing. Remain still.<br/> I dare you.
       </p>
     </main>
   );
