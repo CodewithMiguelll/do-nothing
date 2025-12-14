@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     default: "Do Nothing",
     template: "%s | Do Nothing",
   },
+  icons: {
+    icon: [
+      { url: "/assets/favicon.ico" },
+      { url: "/assets/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/assets/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
   description:
     "Do Nothing is a minimalist productivity web app where the goal is to stay completely still. Any mouse movement, key press, or tab switch resets your timer.",
   keywords: [
@@ -60,7 +68,7 @@ export default function RootLayout({
     <html lang="en" className="bg-black">
       <body
         suppressHydrationWarning
-        className="min-h-screen antialiased text-white font-medium tracking-wide selection:bg-white selection:text-black"
+        className="min-h-screen antialiased text-white bg-[#121212] "
       >
         {children}
       </body>
