@@ -1,4 +1,4 @@
-# Do Nothing 🧘‍♂️
+# Do Nothing 
 
 > A productivity app where productivity is the problem.
 
