@@ -53,10 +53,6 @@ export const metadata: Metadata = {
     images: ["/do-nothing-og-image.png"],
     creator: "@Chikaimaaa",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
 };
 
 export default function RootLayout({
