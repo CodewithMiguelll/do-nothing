@@ -34,7 +34,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="bg-black text-white border-b border-gray-800 px-4 py-3 flex items-center justify-between relative">
+    <nav className="bg-[#121212] text-white border-b border-gray-800 p-4.5 flex items-center justify-between relative">
       {/* Logo */}
       <Link href="/">
         <span className="font-bold text-xl cursor-pointer">Do Nothing</span>
