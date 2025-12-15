@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navigation from "../components/navbar";
+
 
 export const metadata: Metadata = {
   title: {
@@ -66,6 +68,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-screen antialiased text-white bg-[#121212] "
       >
+        <Navigation />
         {children}
       </body>
     </html>
