@@ -16,7 +16,6 @@ const Navigation = () => {
     const result = await signInWithPopup(auth, provider);
     const loggedUser = result.user;
 
-    // Ensure Firestore record exists
     const userRef = doc(db, "users", loggedUser.uid);
     const docSnap = await getDoc(userRef);
 
@@ -35,13 +34,11 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="border-b border-gray-800 bg-black text-white p-4 flex items-center justify-between">
+    <nav className="bg-black text-white border-b border-gray-800 px-4 py-3 flex items-center justify-between relative">
       {/* Logo */}
-      <div className="flex items-center space-x-2">
-        <Link href="/">
-          <span className="font-bold text-xl cursor-pointer">Do Nothing</span>
-        </Link>
-      </div>
+      <Link href="/">
+        <span className="font-bold text-xl cursor-pointer">Do Nothing</span>
+      </Link>
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center space-x-4">
@@ -49,13 +46,13 @@ const Navigation = () => {
           <>
             <button
               onClick={handleGoogleLogin}
-              className="text-[#121212] rounded-md p-2 bg-[#f9faf9] hover:text-gray-300"
+              className="text-black rounded-md p-2 bg-white hover:text-gray-300 transition"
             >
               Log In
             </button>
             <button
               onClick={handleGoogleLogin}
-              className="text-[#121212] rounded-md p-2 bg-[#f9faf9] hover:text-gray-300"
+              className="text-black rounded-md p-2 bg-white hover:text-gray-300 transition"
             >
               Sign Up
             </button>
@@ -65,7 +62,7 @@ const Navigation = () => {
             <span>Signed in as {user.displayName}</span>
             <button
               onClick={handleSignOut}
-              className="text-[#121212] rounded-md p-2 bg-[#f9faf9] hover:text-gray-300"
+              className="text-black rounded-md p-2 bg-white hover:text-gray-300 transition"
             >
               Sign Out
             </button>
@@ -73,44 +70,65 @@ const Navigation = () => {
         )}
       </div>
 
-      {/* Mobile Menu Toggle */}
+      {/* Mobile Hamburger */}
       <div className="md:hidden">
-        <button onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? "Close" : "Menu"}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex flex-col justify-center items-center w-8 h-8 relative"
+        >
+          <span
+            className={`block w-6 h-0.5 bg-white transform transition duration-300 ease-in-out ${
+              isOpen ? "rotate-45 translate-y-2" : ""
+            }`}
+          />
+          <span
+            className={`block w-6 h-0.5 bg-white my-1 transition duration-300 ease-in-out ${
+              isOpen ? "opacity-0" : "opacity-100"
+            }`}
+          />
+          <span
+            className={`block w-6 h-0.5 bg-white transform transition duration-300 ease-in-out ${
+              isOpen ? "-rotate-45 -translate-y-2" : ""
+            }`}
+          />
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="flex flex-col space-y-2 mt-2 md:hidden">
-          {!user ? (
-            <>
-              <button
-                onClick={handleGoogleLogin}
-                className="text-[#121212] rounded-md p-2 bg-[#f9faf9] hover:text-gray-300"
-              >
-                Log In
-              </button>
-              <button
-                onClick={handleGoogleLogin}
-                className="text-[#121212] rounded-md p-2 bg-[#f9faf9] hover:text-gray-300"
-              >
-                Sign Up
-              </button>
-            </>
-          ) : (
-            <>
-              <span>Signed in as {user.displayName}</span>
-              <button
-                onClick={handleSignOut}
-                className="text-[#121212] rounded-md p-2 bg-[#f9faf9] hover:text-gray-300"
-              >
-                Sign Out
-              </button>
-            </>
-          )}
-        </div>
-      )}
+      {/* Mobile Dropdown */}
+      <div
+        className={`absolute top-full right-0 w-48 bg-black border border-gray-700 rounded-md shadow-lg flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        {!user ? (
+          <>
+            <button
+              onClick={handleGoogleLogin}
+              className="text-black bg-white p-3 hover:bg-gray-200 transition"
+            >
+              Log In
+            </button>
+            <button
+              onClick={handleGoogleLogin}
+              className="text-black bg-white p-3 hover:bg-gray-200 transition"
+            >
+              Sign Up
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="px-3 py-3 text-white">
+              Signed in as {user.displayName}
+            </span>
+            <button
+              onClick={handleSignOut}
+              className="text-black bg-white p-3 hover:bg-gray-200 transition"
+            >
+              Sign Out
+            </button>
+          </>
+        )}
+      </div>
     </nav>
   );
 };
