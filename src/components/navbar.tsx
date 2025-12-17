@@ -46,15 +46,9 @@ const Navigation = () => {
           <>
             <button
               onClick={handleGoogleLogin}
-              className="text-black rounded-md p-2 bg-white hover:text-gray-300 transition"
+              className="text-black rounded-md p-2 bg-white"
             >
               Log In
-            </button>
-            <button
-              onClick={handleGoogleLogin}
-              className="text-black rounded-md p-2 bg-white hover:text-gray-300 transition"
-            >
-              Sign Up
             </button>
           </>
         ) : (
@@ -104,15 +98,9 @@ const Navigation = () => {
           <>
             <button
               onClick={handleGoogleLogin}
-              className="text-black bg-white p-3 hover:bg-gray-200 transition"
+              className="text-black bg-white p-3"
             >
               Log In
-            </button>
-            <button
-              onClick={handleGoogleLogin}
-              className="text-black bg-white p-3 hover:bg-gray-200 transition"
-            >
-              Sign Up
             </button>
           </>
         ) : (
