@@ -48,7 +48,7 @@ const Navigation = () => {
               onClick={handleGoogleLogin}
               className="text-black rounded-md p-2 bg-white"
             >
-              Log In
+              Sign Up
             </button>
           </>
         ) : (
