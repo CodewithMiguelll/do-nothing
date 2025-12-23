@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { auth } from "@/lib/firebase";
+import { getUserScore, updateBestScore } from "@/lib/firestore";
+
 
 const ROASTS = [
   "You moved. Weak.",
@@ -16,10 +19,17 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [best, setBest] = useState(0);
 
-  // Load best time
+  // Load best time from Firestore
   useEffect(() => {
-    const stored = localStorage.getItem("do-nothing-best");
-    if (stored) setBest(Number(stored));
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const loadBest = async () => {
+      const score = await getUserScore(user.uid);
+      setBest(score);
+    };
+
+    loadBest();
   }, []);
 
   // Timer
@@ -40,8 +50,13 @@ export default function Home() {
 
       if (seconds > best) {
         setBest(seconds);
-        localStorage.setItem("do-nothing-best", String(seconds));
+
+        const user = auth.currentUser;
+        if (user) {
+          updateBestScore(user.uid, seconds);
+        }
       }
+
 
       setSeconds(0);
       setMessage(
@@ -92,7 +107,8 @@ export default function Home() {
       {lost && <p className="text-red-500 animate-pulse">{message}</p>}
 
       <p className="text-xs opacity-40 text-center">
-        Move nothing. Touch nothing. Remain still.<br/> I dare you.
+        Move nothing. Touch nothing. Remain still.
+        <br /> I dare you.
       </p>
     </main>
   );
