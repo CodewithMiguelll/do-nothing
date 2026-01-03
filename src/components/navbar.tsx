@@ -5,6 +5,7 @@ import { useState } from "react";
 import { signUpWithGoogle, logout } from "@/lib/auth";
 import { auth } from "@/lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { Menu, X } from "lucide-react";
 
 const Navigation = () => {
   const [user] = useAuthState(auth);
@@ -46,7 +47,7 @@ const Navigation = () => {
           className="md:hidden text-2xl focus:outline-none"
           aria-label="Toggle menu"
         >
-          {menuOpen ? "✕" : "☰"}
+          {menuOpen ? <X /> : <Menu />}
         </button>
       </div>
 
