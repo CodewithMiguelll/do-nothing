@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { auth } from "@/lib/firebase";
-import { getUserScore, updateBestScore } from "@/lib/firestore";
-
+import { createClient } from "@/utils/supabase/client";
 
 const ROASTS = [
   "You moved. Weak.",
@@ -18,21 +16,39 @@ export default function Home() {
   const [lost, setLost] = useState(false);
   const [message, setMessage] = useState("");
   const [best, setBest] = useState(0);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  // Load best time from Firestore
+  const supabase = createClient();
+
+  // 1. Load user session and best time from Supabase
   useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) return;
+    const initData = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session?.user) return;
 
-    const loadBest = async () => {
-      const score = await getUserScore(user.uid);
-      setBest(score);
+      const uid = session.user.id;
+      setUserId(uid);
+
+      // Fetch the highest duration_seconds for this specific user
+      const { data, error } = await supabase
+        .from("scores")
+        .select("duration_seconds")
+        .eq("user_id", uid)
+        .order("duration_seconds", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data && !error) {
+        setBest(data.duration_seconds);
+      }
     };
 
-    loadBest();
-  }, []);
+    initData();
+  }, [supabase]);
 
-  // Timer
+  // 2. The Timer
   useEffect(() => {
     if (lost) return;
 
@@ -43,24 +59,30 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [lost]);
 
-  // Failure logic
+  // 3. Failure logic & Saving a New Score
   useEffect(() => {
-    const fail = (reason: string) => {
+    const fail = async (reason: string) => {
       setLost(true);
 
       if (seconds > best) {
         setBest(seconds);
 
-        const user = auth.currentUser;
-        if (user) {
-          updateBestScore(user.uid, seconds);
+        if (userId) {
+          // Insert the new score into the ledger
+          const { error } = await supabase.from("scores").insert({
+            user_id: userId,
+            duration_seconds: seconds,
+          });
+
+          if (error) {
+            console.error("Failed to save score:", error.message);
+          }
         }
       }
 
-
       setSeconds(0);
       setMessage(
-        `${ROASTS[Math.floor(Math.random() * ROASTS.length)]} (${reason})`
+        `${ROASTS[Math.floor(Math.random() * ROASTS.length)]} (${reason})`,
       );
     };
 
@@ -82,9 +104,9 @@ export default function Home() {
       window.removeEventListener("mousedown", onClick);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [seconds, best]);
+  }, [seconds, best, userId, supabase]);
 
-  // Auto reset after loss
+  // 4. Auto reset after loss
   useEffect(() => {
     if (!lost) return;
 
